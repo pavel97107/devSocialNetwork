@@ -1,0 +1,3 @@
+{
+    "mongoURI": "mongodb+srv://pavel:lenovo340@cluster0.d6wz6.azure.mongodb.net/first-mern-app?retryWrites=true&w=majority"
+}
