@@ -1,15 +1,17 @@
-const express = require('express')
+const express = require("express");
+const connectDB = require("./config/db");
 
+const app = express();
 
-const app = express()
+//Connect Database
+connectDB()
+
+app.get("/", (req, res) => {
+  res.send("API running");
+});
 
 const PORT = process.env.PORT || 5000;
 
-
-app.get('/', (req, res) => {
-    res.send('API running')
-})
-
 app.listen(PORT, () => {
-    console.log('Server started op port ' + PORT)
-})
+  console.log("Server started op port " + PORT);
+});
