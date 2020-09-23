@@ -146,4 +146,60 @@ router.delete("/", auth, async (req, res) => {
   }
 });
 
+//@route PUT api/profile/expirience
+//@desc Add expirience in profile
+//@access Private
+
+router.put(
+  "/expirience",
+  [
+    auth,
+    [
+      body("title", "Title is required").not().isEmpty(),
+      body("company", "Company is required").not().isEmpty(),
+      body("from", "From date is required").not().isEmpty(),
+      body("current", "Current date is required").not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+
+    const {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description,
+    } = req.body;
+
+    const newExpirience = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description,
+    };
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      if (!profile) return res.status(404).json({ msg: "Profile not found" });
+
+      profile.experience.unshift(newExpirience);
+      await profile.save();
+
+      res.status(200).json(profile);
+    } catch (e) {
+      if (e.kind === "ObjectId")
+        return res.status(500).json({ msg: "Profile is not valid" });
+      console.error(e);
+      res.status(500).send("Server Error");
+    }
+  }
+);
+
 module.exports = router;
