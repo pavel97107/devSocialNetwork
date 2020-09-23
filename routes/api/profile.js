@@ -4,9 +4,9 @@ const auth = require("../../middleware/auth");
 const { body, validationResult } = require("express-validator");
 const Profile = require("../../models/Profile");
 
-//@route GET api/users
+//@route GET api/profile
 //@desc Get user Profile
-//@access Public
+//@access Private
 
 router.get("/me", auth, async (req, res) => {
   try {
@@ -25,9 +25,9 @@ router.get("/me", auth, async (req, res) => {
   }
 });
 
-//@route GET api/users
+//@route GET api/profile
 //@desc Create and update user Profile
-//@access Public
+//@access Private
 
 router.post(
   "/",
@@ -104,4 +104,26 @@ router.post(
     }
   }
 );
+
+//@route GET api/profile/user/user_id
+//@desc Get one prfoile by id
+//@access Public
+
+router.get("/user/:user_id", async (req, res) => {
+  try {
+    const profile = await Profile.findOne({
+      user: req.params.user_id,
+    }).populate("user", ["name", "avatar"]);
+    if (!profile) {
+      return res.status(404).json({ msg: "Profile not found" });
+    }
+    res.status(200).json(profile);
+  } catch (e) {
+    if (e.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Profile not found" });
+    }
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
