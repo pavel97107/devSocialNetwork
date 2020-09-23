@@ -3,6 +3,7 @@ const router = Router();
 const auth = require("../../middleware/auth");
 const { body, validationResult } = require("express-validator");
 const Profile = require("../../models/Profile");
+const User = require("../../models/User");
 
 //@route GET api/profile
 //@desc Get user Profile
@@ -118,6 +119,25 @@ router.get("/user/:user_id", async (req, res) => {
       return res.status(404).json({ msg: "Profile not found" });
     }
     res.status(200).json(profile);
+  } catch (e) {
+    if (e.kind === "ObjectId") {
+      return res.status(404).json({ msg: "Profile not found" });
+    }
+    res.status(500).send("Server Error");
+  }
+});
+
+//@route DELETE api/profile/
+//@desc Remove Profile and User
+//@access Private
+
+router.delete("/", auth, async (req, res) => {
+  try {
+    await Profile.findOneAndRemove({
+      user: req.user.id,
+    });
+    await User.findOneAndRemove({ _id: req.user.id });
+    res.status(200).json({ msg: "User deleted" });
   } catch (e) {
     if (e.kind === "ObjectId") {
       return res.status(404).json({ msg: "Profile not found" });
