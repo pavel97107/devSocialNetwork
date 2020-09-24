@@ -10,6 +10,8 @@
   "author": "Pavel Serebryany",
   "license": "ISC",
   "dependencies": {
+    "@octokit/request": "^5.4.9",
+    "@octokit/rest": "^18.0.6",
     "bcryptjs": "^2.4.3",
     "config": "^3.3.1",
     "dotenv": "^8.2.0",

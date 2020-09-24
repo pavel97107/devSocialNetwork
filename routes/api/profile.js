@@ -1,10 +1,10 @@
 const { Router } = require("express");
 const router = Router();
+const { request } = require("@octokit/request");
 const auth = require("../../middleware/auth");
 const { body, validationResult } = require("express-validator");
 const Profile = require("../../models/Profile");
 const User = require("../../models/User");
-
 //@route GET api/profile
 //@desc Get user Profile
 //@access Private
@@ -305,6 +305,32 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(500).json({ errors: e });
+  }
+});
+
+//@route GET api/profile/github/:username
+//@desc Get user repos from GitHub
+//@access Public
+
+router.get("/github/:username", async (req, res) => {
+  try {
+    const result = await request({
+      method: "GET",
+      url: `/users/${req.params.username}/repos?sort=created&per_page=5`,
+      headers: {
+        authorization: process.env.SECRET_TOKEN_GITHUB,
+      },
+      org: "octokit",
+      type: "private",
+    });
+
+    if (result.status !== 200)
+      return res.status(404).json({ msg: "Profile not Found" });
+
+    res.status(200).json(result.data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ erors: e });
   }
 });
 
