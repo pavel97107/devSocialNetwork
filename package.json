@@ -5,13 +5,16 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "server" : "nodemon server"
+    "server": "nodemon server"
   },
   "author": "Pavel Serebryany",
   "license": "ISC",
   "dependencies": {
+    "@octokit/request": "^5.4.9",
+    "@octokit/rest": "^18.0.6",
     "bcryptjs": "^2.4.3",
     "config": "^3.3.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-validator": "^6.6.1",
     "gravatar": "^1.8.1",
